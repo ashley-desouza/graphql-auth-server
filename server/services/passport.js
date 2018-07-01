@@ -2,7 +2,6 @@
   Import the passport.js module
 ********************************************************************/
 const passport = require('passport');
-const { promisify } = require('util');
 
 /*******************************************************************
   Import the Github OAuth Strategy -
