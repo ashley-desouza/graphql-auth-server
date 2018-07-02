@@ -4,20 +4,9 @@
 const passport = require('passport');
 
 /*******************************************************************
-  Import the Github OAuth Strategy -
-  https://github.com/cfsghost/passport-github
-********************************************************************/
-const GitHubStrategy = require('passport-github2').Strategy;
-
-/*******************************************************************
   Import the Local Strategy -
 ********************************************************************/
 const LocalStrategy = require('passport-local').Strategy;
-
-/*******************************************************************
-  Import the config file
-********************************************************************/
-const keys = require('./../config/keys');
 
 /*******************************************************************
  Import the mongoose module
@@ -52,7 +41,7 @@ passport.serializeUser((user, done) => {
   session cookie and retrieve the user from the fetched id
 
   The counterpart of 'serializeUser'.
-  Given only a user's ID, we must return the user object.
+  Given only a user's ID, return the user object.
   This object is placed on 'req.user'.
 
   Reference - http://passportjs.org/docs/configure
@@ -148,9 +137,8 @@ passport.use(
   function. req.logIn is apart of Passport JS.
   Refer - http://www.passportjs.org/docs/login/
 
-  Notice the Promise created in the second 'then' statement.
-  This is done because Passport only supports callbacks,
-  while GraphQL only supports promises for async code!  Awkward!
+  The returned Promise is done because Passport only supports callbacks,
+  while GraphQL only supports promises for async code
 ********************************************************************/
 async function signup({ email, password, req }) {
   const user = new User({ email, password });
@@ -159,25 +147,6 @@ async function signup({ email, password, req }) {
     throw new Error('You must provide an email and password.');
   }
 
-  // return User.findOne({ email })
-  //   .then(existingUser => {
-  //     if (existingUser) {
-  //       throw new Error('Email in use');
-  //     }
-
-  //     return user.save();
-  //   })
-  //   .then(user => {
-  //     return new Promise((resolve, reject) => {
-  //       req.logIn(user, err => {
-  //         if (err) {
-  //           reject(err);
-  //         }
-
-  //         resolve(user);
-  //       });
-  //     });
-  //   });
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -202,13 +171,8 @@ async function signup({ email, password, req }) {
 
   This will invoke the 'local-strategy' defined above in this file.
 
-  Notice the strange method signature here:
-  the 'passport.authenticate' function returns a function,
+  The 'passport.authenticate' function returns a function,
   as its indended to be used as a middleware with Express.
-
-  We have another compatibility layer here to make it work nicely
-  with GraphQL, as GraphQL always expects to see a promise
-  for handling async code.
 ********************************************************************/
 function login({ email, password, req }) {
   return new Promise((resolve, reject) => {
