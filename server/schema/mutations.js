@@ -14,20 +14,20 @@ const mutations = new GraphQLObjectType({
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parentValue, args, req) {
+      resolve(parentValue, args, context) {
         const { email, password } = args;
 
-        return PassportService.signup({ email, password, req });
+        return PassportService.signup({ email, password, req: context.req });
       }
     },
     logout: {
       type: UserType,
-      resolve(parentValue, args, req) {
+      resolve(parentValue, args, context) {
         // Extract the currently Logged In User
-        const currentUser = req.user;
+        const currentUser = context.req.user;
 
         // Logout the user: Refer - http://www.passportjs.org/docs/logout/
-        req.logOut();
+        context.req.logOut();
 
         // Return the Logged Out User
         return currentUser;
@@ -39,8 +39,9 @@ const mutations = new GraphQLObjectType({
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parentValue, args, req) {
+      resolve(parentValue, args, context) {
         const { email, password } = args;
+        const { req } = context;
 
         return PassportService.login({ email, password, req });
       }

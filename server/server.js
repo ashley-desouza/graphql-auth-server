@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const keys = require('./config/keys');
 
 /*******************************************************************
- Require in the 'User' and 'Survey' collections, so that they can
+ Require in the 'User' collection, so that they can
  be created in the database at run time.
 
  IMP - Import this before the passport Middleware as well as the 
@@ -98,9 +98,15 @@ app.use(passport.session());
 ********************************************************************/
 app.use(
   '/graphql',
-  expressGraphQL({
-    schema,
-    graphiql: true
+  expressGraphQL((req, res) => {
+    return {
+      schema,
+      graphiql: true,
+      context: {
+        req,
+        res
+      }
+    };
   })
 );
 
