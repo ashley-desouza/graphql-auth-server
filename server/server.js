@@ -3,6 +3,7 @@ const session = require('express-session');
 const expressGraphQL = require('express-graphql');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const keys = require('./config/keys');
 
@@ -43,6 +44,15 @@ mongoose.connection
 Create an Express App
 ********************************************************************/
 const app = express();
+
+/*******************************************************************
+ Middleware for the body-parser module
+ It parses incoming request bodies in a middleware before
+ your handlers, available under the req.body property.
+
+ Reference - https://www.npmjs.com/package/body-parser
+********************************************************************/
+app.use(bodyParser.json());
 
 /*******************************************************************
  Tell the Express Application to use the MongoStore for session
