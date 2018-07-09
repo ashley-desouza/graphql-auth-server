@@ -45,6 +45,14 @@ const mutations = new GraphQLObjectType({
 
         return PassportService.login({ email, password, req });
       }
+    },
+    loginWithGithub: {
+      type: UserType,
+      resolve(parentValue, args, context) {
+        const { req } = context;
+
+        return PassportService.loginWithGithub(req);
+      }
     }
   }
 });

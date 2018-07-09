@@ -75,9 +75,11 @@ app.use(bodyParser.json());
 app.use(
   session({
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     secret: keys.expressSession,
     cookie: {
+      httpOnly: true,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000 // 1 day in milliseconds
     },
     store: new MongoStore({
@@ -111,7 +113,7 @@ app.use(
   expressGraphQL((req, res) => {
     return {
       schema,
-      graphiql: true,
+      graphiql: process.env.NODE_ENV !== 'production',
       context: {
         req,
         res

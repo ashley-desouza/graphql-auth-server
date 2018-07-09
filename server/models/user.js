@@ -10,7 +10,8 @@ const { Schema } = mongoose;
 // Declare the User Mongoose Schema
 const UserSchema = new Schema({
   email: String,
-  password: String
+  password: String,
+  githubId: String
 });
 
 /********************************************************************
