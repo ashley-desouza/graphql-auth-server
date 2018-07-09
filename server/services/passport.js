@@ -175,6 +175,9 @@ async function signup({ email, password, req }) {
   as its indended to be used as a middleware with Express.
 ********************************************************************/
 function login({ email, password, req }) {
+  // Reset req.body
+  // Refer - https://github.com/jaredhanson/passport-local/blob/master/lib/strategy.js#L69
+  req.body = { email, password };
   return new Promise((resolve, reject) => {
     passport.authenticate('local', (err, user) => {
       if (!user) {
@@ -182,7 +185,7 @@ function login({ email, password, req }) {
       }
 
       req.logIn(user, () => resolve(user));
-    })({ body: { email, password } });
+    })(req);
   });
 }
 
